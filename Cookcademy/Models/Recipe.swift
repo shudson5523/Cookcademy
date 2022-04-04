@@ -14,6 +14,9 @@ struct Recipe: Identifiable {
     var mainInformation: MainInformation
     var ingredients: [Ingredient]
     var directions: [Direction]
+    var isValid: Bool {
+        mainInformation.isValid && !ingredients.isEmpty && !directions.isEmpty
+    }
     
     init(mainInformation: MainInformation, ingredients:[Ingredient], directions:[Direction]) {
         self.mainInformation = mainInformation
@@ -33,6 +36,9 @@ struct MainInformation {
     var description: String
     var author: String
     var category: Category
+    var isValid: Bool {
+        !name.isEmpty && !description.isEmpty && !author.isEmpty
+    }
     
     enum Category: String, CaseIterable {
         case breakfast = "Breakfast"
@@ -71,6 +77,16 @@ struct Ingredient {
         case none = "No Units"
         
         var singularName: String { String(rawValue.dropLast()) }
+    }
+    
+    init (name: String, quantity: Double, unit: Unit) {
+        self.name = name
+        self.quantity = quantity
+        self.unit = unit
+    }
+    
+    init() {
+        self.init(name: "", quantity: 1.0, unit: .none)
     }
 }
 
