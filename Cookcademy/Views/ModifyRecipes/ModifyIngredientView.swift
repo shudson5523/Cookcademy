@@ -7,13 +7,18 @@
 
 import SwiftUI
 
-struct ModifyIngredientView: View {
+struct ModifyIngredientView: ModifyComponentView {
     @Binding var ingredient: Ingredient
     let createAction: ((Ingredient) -> Void)
     
+    init(component: Binding<Ingredient>, createAction: @escaping (Ingredient) -> Void) {
+        self._ingredient = component
+        self.createAction = createAction
+    }
+
     private let listBackgroundColor = AppColor.background
     private let listTextColor = AppColor.foreground
-
+    
     @Environment(\.presentationMode) private var mode
 
     var body: some View {
@@ -25,7 +30,7 @@ struct ModifyIngredientView: View {
                     Text("Quantity:")
                     TextField("Quantity", value: $ingredient.quantity, formatter: NumberFormatter.decimal)
                         .keyboardType(.numbersAndPunctuation)
-                }.listRowBackground(listBackgroundColor)
+                }
             }.listRowBackground(listBackgroundColor)
             Picker(selection: $ingredient.unit, label: HStack {
                 Text("Unit")
@@ -63,7 +68,7 @@ struct ModifyIngredientView_Previews: PreviewProvider {
     @State static var recipe = Recipe.testRecipes[0]
     static var previews: some View {
         NavigationView {
-           ModifyIngredientView(ingredient: $recipe.ingredients[0]) { ingredient in
+           ModifyIngredientView(component: $recipe.ingredients[0]) { ingredient in
                 print(ingredient)
             }.navigationTitle("Add Ingredient")
         }
